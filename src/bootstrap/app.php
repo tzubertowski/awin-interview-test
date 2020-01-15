@@ -20,5 +20,6 @@ $app->singleton(
     App\Console\Kernel::class
 );
 
+$app->withFacades();
 
 return $app;

@@ -13,6 +13,12 @@ class CurrencyExchangeService
         $this->exchangeRates = $exchangeRates;
     }
 
+    /**
+     * @param int $value
+     * @param Currency $from
+     * @param Currency $to
+     * @return float|int
+     */
     public function exchange(int $value, Currency $from, Currency $to) {
         if (!array_key_exists($to->getValue(), $this->exchangeRates)) {
             throw new \InvalidArgumentException(

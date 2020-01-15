@@ -18,7 +18,7 @@ class GbpReportPresenter
     }
 
     /**
-     * Presents Transaction value for the report
+     * Maps Transaction to reportable, presented values
      *
      * @param array $transactions
      * @return array

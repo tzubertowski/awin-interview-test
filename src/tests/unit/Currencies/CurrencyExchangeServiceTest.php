@@ -35,11 +35,29 @@ class CurrencyExchangeServiceTest extends TestCase
     {
         $config = [
             '£' => [
-                '€' => 1.17,
+                '€' => 117,
             ],
         ];
         $sut = new CurrencyExchangeService($config);
         $exchangedValue = $sut->exchange(100, Currency::EUR(), Currency::GBP());
-        $this->assertEquals($exchangedValue, 100 * 1.17);
+        $this->assertEquals($exchangedValue, 117);
+    }
+
+    /**
+     * PHP gets iffy with multiplication of floats, thus using ints
+     *
+     * eg. 100.00 * 10206.37 != 10000 * 1020637
+     */
+    public function testMultipliesFloatsWithoutRounding()
+    {
+        $config = [
+            '£' => [
+                '€' => 10000,
+            ],
+        ];
+        $value = 1020637;
+        $sut = new CurrencyExchangeService($config);
+        $exchangedValue = $sut->exchange($value, Currency::EUR(), Currency::GBP());
+        $this->assertEquals(102063700, $exchangedValue);
     }
 }

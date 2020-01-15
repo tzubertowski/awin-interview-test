@@ -30,6 +30,6 @@ class CurrencyExchangeService
                 'Exchange from ' . $to->getValue() . ' is unsupported.'
             );
         }
-        return $this->exchangeRates[$to->getValue()][$from->getValue()] * $value;
+        return ($this->exchangeRates[$to->getValue()][$from->getValue()] * $value) / 100;
     }
 }

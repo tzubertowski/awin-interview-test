@@ -53,3 +53,15 @@ docker exec -it awin-service /bin/bash
 ```
 php artisan merchant:transaction_report 2
 ```
+
+## Running the Tests
+Make sure the docker container is running, then simply:
+
+1. SSH into the container
+```
+docker exec -it awin-service /bin/bash
+```
+2. Execute the command
+```
+./vendor/bin/phpunit
+```

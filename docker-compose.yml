@@ -1,0 +1,13 @@
+version: "3"
+services:
+  awin-service:
+    container_name: awin-service
+    restart: always
+    build:
+      dockerfile: Dockerfile
+      context: ./
+    volumes:
+      - ./src:/var/www/service
+    ports:
+      - "80:80"
+    command: tail -f /dev/null

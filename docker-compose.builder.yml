@@ -1,0 +1,10 @@
+version: "2"
+services:
+  build_service:
+    build:
+      dockerfile: Dockerfile
+      context: ./
+    volumes:
+      - ./src:/var/www/service
+    working_dir: /var/www/service
+    command: composer install

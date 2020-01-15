@@ -1,12 +1,13 @@
 <?php
 
-use App\Exceptions\CurrencyUnsupportedException;
-use App\Transactions\Entity\Currency;
+use App\Exceptions\Transactions\CurrencyUnsupportedException;
+use App\Currencies\Entity\Currency;
 
 class CurrencyTest extends TestCase
 {
     /**
      * @dataProvider provideValidCurrencyCodes
+     * @param string $currencyCode
      */
     public function testCanInstantiateWithValidCurrency(string $currencyCode)
     {

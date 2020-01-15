@@ -3,12 +3,12 @@
 namespace App\Storage;
 
 use InvalidArgumentException;
-use App\Exceptions\Storage\EndOfResourceException;
 
 class CsvReader
 {
     private $csvDatabase;
     public $headers;
+    const delimiter = ';';
 
     /**
      * @param \Resource $csvDatabase
@@ -26,9 +26,8 @@ class CsvReader
 
     public function readLine()
     {
-        while (($csvLine = fgetcsv($this->csvDatabase)) !== false) {
+        while (($csvLine = fgetcsv($this->csvDatabase, null, self::delimiter)) !== false) {
             yield $csvLine;
         }
-        throw new EndOfResourceException('There are no more lines to read');
     }
 }

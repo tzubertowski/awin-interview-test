@@ -1,6 +1,6 @@
 <?php
 
-use App\Transactions\Entity\Currency;
+use App\Currencies\Entity\Currency;
 use App\Transactions\Entity\Transaction;
 use Carbon\Carbon;
 

@@ -1,8 +1,8 @@
 <?php
 
-use App\Exceptions\InvalidTransactionDateException;
-use App\Exceptions\InvalidTransactionValueException;
-use App\Transactions\Entity\Currency;
+use App\Exceptions\Transactions\InvalidTransactionDateException;
+use App\Exceptions\Transactions\InvalidTransactionValueException;
+use App\Currencies\Entity\Currency;
 use App\Transactions\Entity\Transaction;
 use App\Transactions\Entity\TransactionHydrator;
 use Carbon\Carbon;
@@ -17,8 +17,7 @@ class TransactionHydratorTest extends TestCase
      */
     public function testHydratesWithValidFields(array $transactionFields, Currency $expectedCurrency, float $expectedValue)
     {
-        $sut = new TransactionHydrator();
-        $transaction = $sut->fromArray($transactionFields);
+        $transaction = TransactionHydrator::fromArray($transactionFields);
         $this->assertInstanceOf(Transaction::class, $transaction);
         $this->assertEquals((int) $transactionFields[0], $transaction->merchant);
         $this->assertEquals(Carbon::parse($transactionFields[1]), $transaction->date);
@@ -29,9 +28,9 @@ class TransactionHydratorTest extends TestCase
     public function provideValidTransactionFields()
     {
         return [
-            [[1, "01/05/2010", "£50.00",], Currency::GBP(), 50.00],
-            [['2', "01/05/2010", "$66.10",], Currency::USD(), 66.10],
-            [['2', "02/05/2010", "€12.00",], Currency::EUR(), 12.00],
+            [[1, "01/05/2010", "£50.00",], Currency::GBP(), 5000],
+            [['2', "01/05/2010", "$66.10",], Currency::USD(), 6610],
+            [['2', "02/05/2010", "€12.00",], Currency::EUR(), 1200],
         ];
     }
 
@@ -45,7 +44,7 @@ class TransactionHydratorTest extends TestCase
     {
         $sut = new TransactionHydrator();
         $this->expectException($expectedException);
-        $sut->fromArray($transactionFields);
+        TransactionHydrator::fromArray($transactionFields);
     }
 
     public function provideInvalidTransactionFields()

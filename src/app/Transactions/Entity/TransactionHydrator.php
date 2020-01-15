@@ -2,8 +2,9 @@
 
 namespace App\Transactions\Entity;
 
-use App\Exceptions\InvalidTransactionDateException;
-use App\Exceptions\InvalidTransactionValueException;
+use App\Currencies\Entity\Currency;
+use App\Exceptions\Transactions\InvalidTransactionDateException;
+use App\Exceptions\Transactions\InvalidTransactionValueException;
 use Carbon\Carbon;
 use Exception;
 use InvalidArgumentException;
@@ -19,7 +20,7 @@ class TransactionHydrator
 
     const expectedFieldsCount = 3;
 
-    private function validateRawPayload($data)
+    private static function validateRawPayload($data)
     {
         $dataCount = count($data);
         if ($dataCount !== self::expectedFieldsCount) {
@@ -32,9 +33,9 @@ class TransactionHydrator
         Validator::make($data, self::validation);
     }
 
-    public function fromArray(array $data)
+    public static function fromArray(array $data)
     {
-        $data = $this->mapPayloadToFields($data);
+        $data = self::mapPayloadToFields($data);
 
         return new Transaction(
             (int) $data['merchant'],
@@ -53,9 +54,9 @@ class TransactionHydrator
      * @param array $data
      * @return array
      */
-    private function mapPayloadToFields(array $data): array
+    private static function mapPayloadToFields(array $data): array
     {
-        $this->validateRawPayload($data);
+        self::validateRawPayload($data);
         $mappedData = [];
         foreach (array_keys(self::validation) as $key => $property) {
             if (!array_key_exists($key, $data)) {
@@ -64,7 +65,6 @@ class TransactionHydrator
             $mappedData[$property] = $data[$key];
         }
 
-        $currency = mb_substr($mappedData['value'], 0, 1);
         $value = mb_substr($mappedData['value'], 1);
         if (!is_numeric($value)) {
             throw new InvalidTransactionValueException();
@@ -74,9 +74,11 @@ class TransactionHydrator
         } catch (Exception $e) {
             throw new InvalidTransactionDateException('Invalid transaction date');
         }
-        $mappedData['value'] = $value;
-        $mappedData['date'] = $transactionDate;
+
+        $currency = mb_substr($mappedData['value'], 0, 1);
         $mappedData['currency'] = Currency::fromCurrencyCode($currency);
+        $mappedData['value'] = $value * 100;
+        $mappedData['date'] = $transactionDate;
 
         return $mappedData;
     }

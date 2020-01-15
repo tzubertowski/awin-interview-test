@@ -2,6 +2,7 @@
 
 namespace App\Transactions\Entity;
 
+use App\Currencies\Entity\Currency;
 use DateTime;
 
 class Transaction

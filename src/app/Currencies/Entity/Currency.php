@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Transactions\Entity;
+namespace App\Currencies\Entity;
 
 use MyCLabs\Enum\Enum;
-use App\Exceptions\CurrencyUnsupportedException;
+use App\Exceptions\Transactions\CurrencyUnsupportedException;
 
 class Currency extends Enum
 {

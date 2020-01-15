@@ -3,11 +3,11 @@
 namespace App\Providers;
 
 use App\Console\Commands\MerchantReportCommand;
-use App\Currencies\Entity\CurrencyExchangeService;
+use App\Currencies\CurrencyExchangeService;
+use App\Reports\GbpReportPresenter;
 use App\Storage\CsvReader;
 use App\Transactions\Entity\TransactionHydrator;
 use App\Transactions\TransactionRepository;
-use function foo\func;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -34,10 +34,15 @@ class AppServiceProvider extends ServiceProvider
                 new TransactionHydrator()
             );
         });
+        $this->app->bind(GbpReportPresenter::class, function ($app) {
+            return new GbpReportPresenter(
+                $app->make(CurrencyExchangeService::class)
+            );
+        });
         $this->app->bind(MerchantReportCommand::class, function ($app) {
            return new MerchantReportCommand(
                $app->make(TransactionRepository::class),
-               $app->make(CurrencyExchangeService::class)
+               $app->make(GbpReportPresenter::class)
            );
         });
     }

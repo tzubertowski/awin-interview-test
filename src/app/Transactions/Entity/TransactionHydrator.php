@@ -12,13 +12,24 @@ use Illuminate\Support\Facades\Validator;
 
 class TransactionHydrator
 {
+    const expectedFieldsCount = 3;
     const validation = [
         'merchant' => 'required|int',
         'date' => 'required|date',
         'value' => 'regex:^[\$\£€][0-9]+.[0-9]{2}',
     ];
 
-    const expectedFieldsCount = 3;
+    public static function fromArray(array $data)
+    {
+        $data = self::mapPayloadToFields($data);
+
+        return new Transaction(
+            (int) $data['merchant'],
+            $data['date'],
+            $data['currency'],
+            $data['value']
+        );
+    }
 
     private static function validateRawPayload($data)
     {
@@ -31,18 +42,6 @@ class TransactionHydrator
             );
         }
         Validator::make($data, self::validation);
-    }
-
-    public static function fromArray(array $data)
-    {
-        $data = self::mapPayloadToFields($data);
-
-        return new Transaction(
-            (int) $data['merchant'],
-            $data['date'],
-            $data['currency'],
-            $data['value']
-        );
     }
 
     /**

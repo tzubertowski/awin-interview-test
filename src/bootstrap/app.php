@@ -12,7 +12,7 @@ $app = new Laravel\Lumen\Application(
 
 $app->singleton(
     Illuminate\Contracts\Debug\ExceptionHandler::class,
-    App\Exceptions\Handler::class
+    \App\Exceptions\Handler::class
 );
 
 $app->singleton(
@@ -20,6 +20,13 @@ $app->singleton(
     App\Console\Kernel::class
 );
 
+$app->register(App\Providers\AppServiceProvider::class);
+
 $app->withFacades();
+
+collect(scandir(__DIR__ . '/../config'))->each(function ($item) use ($app) {
+    $app->configure(basename($item, '.php'));
+});
+
 
 return $app;

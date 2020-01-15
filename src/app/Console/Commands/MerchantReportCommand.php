@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Currencies\Entity\CurrencyExchangeService;
+use App\Reports\GbpReportPresenter;
 use App\Transactions\TransactionRepository;
 use Illuminate\Console\Command;
 
@@ -20,20 +20,19 @@ class MerchantReportCommand extends Command
     protected $description = 'Generates report of transactions for a given merchant';
 
     private $transactions;
-    private $exchangeService;
+    private $presenter;
 
-    public function __construct(TransactionRepository $transactions, CurrencyExchangeService $exchangeService)
+    public function __construct(TransactionRepository $transactions, GbpReportPresenter $presenter)
     {
         parent::__construct();
         $this->transactions = $transactions;
-        $this->exchangeService = $exchangeService;
+        $this->presenter = $presenter;
     }
 
     public function handle()
     {
         $merchantId = $this->argument('merchant_id');
         $transactions = $this->transactions->getTransactionsByMerchantId($merchantId);
-
-        $this->table(self::TABLE_HEADERS, $transactions);
+        $this->table(self::TABLE_HEADERS, $this->presenter->present($transactions));
     }
 }

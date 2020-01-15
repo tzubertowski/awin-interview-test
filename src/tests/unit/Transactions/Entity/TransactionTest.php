@@ -5,8 +5,6 @@ use App\Transactions\Entity\Transaction;
 use Carbon\Carbon;
 
 /**
- * Tests Transaction behaviour
- *
  * Redundant tests like strict type arguments are skipped
  */
 class TransactionTest extends TestCase
